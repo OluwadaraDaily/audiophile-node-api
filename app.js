@@ -8,7 +8,7 @@ const bodyParser = require('body-parser')
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
-const db = require('./config/db')
+const db = require('./config/db/db')
 
 require('dotenv').config();
 
@@ -25,20 +25,6 @@ app.use(cookieParser());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Test the database connection (optional)
-const testConnection = async () => {
-  try {
-    const dbQuery = "SELECT 1 + 1 AS solution"
-    const [result, fields] = await db.execute(dbQuery)
-    console.log('RESULT =>', result)
-    console.log('FIELDS =>', fields[0])
-  } catch (error) { 
-      console.error('Error executing query: ', error);
-  }
-}
-
-testConnection()
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
