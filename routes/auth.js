@@ -1,16 +1,9 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const authController = require('../controllers/authController');
 
-router.post('/', (req, res, next) => {
-  res.redirect('/login')
-})
+router.post('/', authController.login)
 
-router.post('/register', (req, res, next) => {
-  console.log('REQUEST =>', req)
-  // console.log('REQUEST =>', req.body)
-  res.json({
-    status: 200
-  })
-})
+router.post('/register', authController.register)
 
 module.exports = router;
