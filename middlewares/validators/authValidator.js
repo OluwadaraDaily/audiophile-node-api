@@ -1,4 +1,4 @@
-const { body } = require('express-validator');
+const { body, query } = require('express-validator');
 
 const registerValidator = [
   body("first_name")
@@ -32,9 +32,16 @@ const registerValidator = [
     .withMessage("Password is required")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters long"),
+];
+
+const activateValidator = [
+  query("token")
+    .notEmpty()
+    .withMessage("Token is required")
 ]
 
 
 module.exports = {
-  registerValidator
+  registerValidator,
+  activateValidator
 }
