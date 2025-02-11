@@ -19,10 +19,7 @@ const register = async (req, res, next) => {
 const activate = async (req, res) => {
   try {
     const { token } = req.query
-    console.log('TOKEN =>', token)
     const userWithToken = await authService.verifyToken(token)
-    
-    console.log("userWithToken =>", userWithToken)
     
     if (!userWithToken.user) {
       return res.status(400).json({

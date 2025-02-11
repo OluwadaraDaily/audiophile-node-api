@@ -6,7 +6,6 @@ const MAILGUN_SANDBOX_URL = 'sandbox657194b28ebb42d98ba1ec4ed620834d.mailgun.org
 
 const sendEmail = async ({ to, subject, text, html }) => {
   try {
-    console.log('MAILGUN =>', mg)
     const mailOptions = {
       from: `Audiophile <mailgun@${MAILGUN_SANDBOX_URL}>`,
       to: [...to],
@@ -14,8 +13,6 @@ const sendEmail = async ({ to, subject, text, html }) => {
       text,
       html
     };
-
-    console.log('mailOptions =>', mailOptions)
 
     const info = await mg.messages.create(MAILGUN_SANDBOX_URL, mailOptions);
     console.log('Email sent:', info);
@@ -26,4 +23,26 @@ const sendEmail = async ({ to, subject, text, html }) => {
   }
 };
 
-module.exports = { sendEmail }
+const sendEmailWithNodeMailer = async ({ to, subject, text, html }) => {
+  try {
+    const mailOptions = {
+      from: process.env.MAIL_USER,
+      to: to,
+      envelope: {
+        from: `Audiophile <${process.env.MAIL_USER}>`,
+        to
+      },
+      subject,
+      text,
+      html
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info);
+    return info;
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+}
+
+module.exports = { sendEmail, sendEmailWithNodeMailer }
