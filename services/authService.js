@@ -154,5 +154,6 @@ const loginUser = async (userInfo) => {
 module.exports = {
   registerUser,
   verifyToken,
-  loginUser
+  loginUser,
+  generateJWTTokens
 }

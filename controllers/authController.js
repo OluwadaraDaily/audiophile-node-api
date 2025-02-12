@@ -1,3 +1,4 @@
+require('dotenv').config({ path: "../.env" });
 const authService = require('../services/authService');
 
 const login = async (req, res, next) => {
@@ -48,4 +49,28 @@ const activate = async (req, res) => {
   }
 }
 
-module.exports = { login, register, activate }
+const refreshToken = async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+
+  jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+
+    const newTokens = authService.generateJWTTokens({ id: user.userId });
+
+    res.cookie("refreshToken", newTokens.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    });
+
+    res.json({ accessToken: newTokens.accessToken });
+  });
+}
+
+module.exports = {
+  login,
+  register,
+  activate,
+  refreshToken
+}

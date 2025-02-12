@@ -10,4 +10,6 @@ router.get(`/activate`, authValidator.activateValidator, validate, authControlle
 
 router.post(`/login`, authValidator.loginValidator, validate, authController.login)
 
+router.get('/refresh', authController.refreshToken)
+
 module.exports = router;
