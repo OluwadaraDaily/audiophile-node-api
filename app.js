@@ -8,7 +8,6 @@ const bodyParser = require('body-parser')
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
-const db = require('./config/db/db')
 
 require('dotenv').config();
 

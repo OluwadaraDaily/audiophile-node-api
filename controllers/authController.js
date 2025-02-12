@@ -1,7 +1,20 @@
 const authService = require('../services/authService');
 
 const login = async (req, res, next) => {
-  console.log('BODY =>', req.body)
+  try {
+    const { email, password } = req.body;
+    const response = await authService.loginUser({ email, password });
+    
+    res.cookie("refreshToken", response.refreshToken, {
+      httpOnly: true, // Prevents JavaScript access
+      secure: true, // Use HTTPS
+      sameSite: "Strict", // CSRF protection
+    });
+    
+    return res.status(200).json(response)
+  } catch (error) {
+    return res.status(500).json({ message: error.message || "An error occurred" })
+  }
 }
 
 const register = async (req, res, next) => {

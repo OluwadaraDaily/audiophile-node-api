@@ -4,6 +4,7 @@ const db = require("../config/db/db");
 const bcrypt = require('bcrypt');
 const userService = require("./userService");
 const emailService = require("./mailService");
+const jwt = require("jsonwebtoken");
 
 const BASE_URL = process.env.BASE_URL
 
@@ -112,8 +113,46 @@ const verifyToken = async (token) => {
   return {user: safeUser}
 }
 
+const generateJWTTokens = (user) => {
+  const accessToken = jwt.sign({ userId: user.id }, process.env.ACCESS_SECRET, {
+    expiresIn: "15m",
+  });
+
+  const refreshToken = jwt.sign({ userId: user.id }, process.env.REFRESH_SECRET, {
+    expiresIn: "7d",
+  });
+
+  return { accessToken, refreshToken };
+}
+
+const loginUser = async (userInfo) => {
+  const { email, password } = userInfo;
+  const user = await userService.getUserByEmail(email);
+
+  if (!user.is_activated) {
+    throw new Error('Please activate your account');
+  }
+  const isPasswordEqual = await comparePassword(password, user.password);
+  if (!isPasswordEqual) {
+    throw new Error(`Password is not correct`);
+  }
+  const { accessToken, refreshToken } = generateJWTTokens(user);
+
+  let response = {
+    first_name: user.first_name,
+    last_name: user.last_name,
+    email: user.email,
+    is_activated: user.is_activated,
+    accessToken,
+    refreshToken,
+  }
+
+  return response;
+}
+
 
 module.exports = {
   registerUser,
-  verifyToken
+  verifyToken,
+  loginUser
 }

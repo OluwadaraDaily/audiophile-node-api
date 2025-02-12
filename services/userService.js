@@ -3,15 +3,19 @@ const db = require("../config/db/db");
 const getUserByEmail = async (email) => {
   let user = await db('users').where({ email }).first();
 
-  if (!user) return null
+  if (!user) {
+    throw new Error(`User with email (${email}) not found`)
+  }
   
-  const { id, first_name, last_name, email: safeUserEmail } = user;
+  const { id, first_name, last_name, email: safeUserEmail, password, is_activated } = user;
 
   const safeUser = {
     id,
     first_name,
     last_name,
     email: safeUserEmail,
+    password,
+    is_activated
   }
 
   return safeUser;
