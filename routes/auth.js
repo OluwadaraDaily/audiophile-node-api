@@ -1,16 +1,17 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const authController = require('../controllers/authController');
+const authValidator = require("../middlewares/validators/authValidator")
+const validate = require("../middlewares/validators/validate");
 
-router.post('/', (req, res, next) => {
-  res.redirect('/login')
-})
+router.post('/register', authValidator.registerValidator, validate, authController.register)
 
-router.post('/register', (req, res, next) => {
-  console.log('REQUEST =>', req)
-  // console.log('REQUEST =>', req.body)
-  res.json({
-    status: 200
-  })
-})
+router.get(`/activate`, authValidator.activateValidator, validate, authController.activate)
+
+router.post(`/login`, authValidator.loginValidator, validate, authController.login)
+
+router.get('/refresh', authController.refreshToken)
+
+router.get('/logout', authController.logout)
 
 module.exports = router;
