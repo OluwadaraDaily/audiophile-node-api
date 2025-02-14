@@ -19,6 +19,8 @@ More details to come
 ### Start MySQL container
 
   ```bash
+
+    docker pull mysql
   
     docker run \
     --rm \
@@ -28,6 +30,7 @@ More details to come
     -e MYSQL_ROOT_PASSWORD=apipassword \
     --network network-name \
     -v mysql_data:/var/lib/mysql \
+    -p 3306:3306
     mysql:latest
 
   ```
@@ -41,7 +44,8 @@ More details to come
     --name node-container-name \
     --network network-name \
     -p 8000:3000 \
-    -v $(pwd):/app \
+    -v .:/app \
+    -v /app/node_modules \
     image-name
 
   ```
