@@ -129,6 +129,10 @@ const loginUser = async (userInfo) => {
   const { email, password } = userInfo;
   const user = await userService.getUserByEmail(email);
 
+  if (!user) {
+    throw new Error(`User with email (${email}) not found`)
+  }
+
   if (!user.is_activated) {
     throw new Error('Please activate your account');
   }
