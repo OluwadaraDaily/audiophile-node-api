@@ -1,7 +1,7 @@
 require('dotenv').config({ path: "../.env" });
 
 const db = require("../config/db/db");
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const userService = require("./userService");
 const emailService = require("./mailService");
 const jwt = require("jsonwebtoken");
@@ -55,13 +55,13 @@ const sendVerificationMail = async ({ firstName, email, token }) => {
 }
 
 const hashPassword = async (password) => {
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  const saltRounds = bcrypt.genSaltSync(10);
+  const hashedPassword = await bcrypt.hashSync(password, saltRounds);
   return hashedPassword;
 }
 
 async function comparePassword(password, hash) {
-  const result = await bcrypt.compare(password, hash);
+  const result = await bcrypt.compareSync(password, hash);
   return result;
 }
 
