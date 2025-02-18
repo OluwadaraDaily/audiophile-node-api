@@ -13,16 +13,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2  # This action checks out your repo so the workflow can access the latest code
 
-    - name: Check SSH Agent
+    - name: Check if secret is there
       run: |
-        echo "Checking SSH agent..."
-        ssh-add -l  # List keys currently in the SSH agent
+        echo "Here..."
+        echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}"
 
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3  # This action sets up the SSH agent to authenticate to your EC2 instance
       with:
         ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # Fetches your private SSH key from GitHub secrets
-
+    
+    - name: Check SSH Agent
+      run: |
+        echo "Checking SSH agent..."
+        ssh-add -l  # List keys currently in the SSH agent
+    
     - name: Cache Node.js dependencies
       uses: actions/cache@v4
       with:
