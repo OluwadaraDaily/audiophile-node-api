@@ -22,6 +22,7 @@ jobs:
       uses: webfactory/ssh-agent@v0.5.3  # This action sets up the SSH agent to authenticate to your EC2 instance
       with:
         ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # Fetches your private SSH key from GitHub secrets
+        ssh-passphrase: ${{ secrets.EC2_SSH_PASSPHRASE }}
     
     - name: Check SSH Agent
       run: |
@@ -42,7 +43,7 @@ jobs:
 
     - name: Deploy to EC2
       run: |
-        ssh -o StrictHostKeyChecking=no ec2-user@<${{ secrets.EC2_PUBLIC_IP }}> << 'EOF'
+        ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
           cd ~/audiophile-node-api  # Navigate to your app directory on the EC2 instance
           git pull origin main  # Pull the latest changes from GitHub (main branch)
           npm install  # Install any new dependencies that were added
