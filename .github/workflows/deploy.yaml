@@ -19,7 +19,7 @@ jobs:
         ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # Fetches your private SSH key from GitHub secrets
 
     - name: Cache Node.js dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ~/.npm  # Cache the npm cache directory
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}  # Cache key is based on the package-lock.json hash
