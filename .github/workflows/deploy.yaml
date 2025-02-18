@@ -13,6 +13,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2  # This action checks out your repo so the workflow can access the latest code
 
+    - name: Check SSH Agent
+      run: |
+        echo "Checking SSH agent..."
+        ssh-add -l  # List keys currently in the SSH agent
+
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3  # This action sets up the SSH agent to authenticate to your EC2 instance
       with:
