@@ -3,49 +3,29 @@ name: Deploy to EC2
 on:
   push:
     branches:
-      - main  # Trigger the workflow when changes are pushed to the main branch
+      - main
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # Runs the workflow on an Ubuntu machine (GitHub's default runner)
-
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2  # This action checks out your repo so the workflow can access the latest code
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Check if secret is there
-      run: |
-        echo "Here..."
-        echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}"
+      - name: Setup SSH agent and load key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.7.0  # This action sets up the SSH agent to authenticate to your EC2 instance
-      with:
-        ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # Fetches your private SSH key from GitHub secrets
-        ssh-passphrase: ${{ secrets.EC2_SSH_PASSPHRASE }}
-    
-    - name: Check SSH Agent
-      run: |
-        echo "Checking SSH agent..."
-        ssh-add -l  # List keys currently in the SSH agent
-    
-    - name: Cache Node.js dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.npm  # Cache the npm cache directory
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}  # Cache key is based on the package-lock.json hash
-        restore-keys: |
-          ${{ runner.os }}-node-
+      - name: Add EC2 host to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-    - name: Install dependencies
-      run: |
-        npm install  # Installs all dependencies in your repo
-
-    - name: Deploy to EC2
-      run: |
-        ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-          cd ~/audiophile-node-api  # Navigate to your app directory on the EC2 instance
-          git pull origin main  # Pull the latest changes from GitHub (main branch)
-          npm install  # Install any new dependencies that were added
-          pm2 restart audiophile-api  # Restart the PM2 process to apply updates
-        EOF
+      - name: Deploy Node.js app via SSH
+        env:
+          USER: ${{ secrets.EC2_USER }}
+          HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          # Execute the deploy script on the remote EC2 instance
+          ssh $USER@$HOST "bash -s" < ./deploy.sh
