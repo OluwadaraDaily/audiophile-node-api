@@ -28,4 +28,4 @@ jobs:
           HOST: ${{ secrets.EC2_HOST }}
         run: |
           # Execute the deploy script on the remote EC2 instance
-          ssh $USER@$HOST "bash -s" < ./deploy.sh
+          ssh $USER@$HOST "bash -s" < ./scripts/deploy.sh
