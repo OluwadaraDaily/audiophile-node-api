@@ -17,10 +17,6 @@ git pull origin main
 echo "Installing deps.."
 npm install
 
-echo "Building the app.."
-
-npm run build
-
 # Restart the app using PM2 (or start it if not already running)
 echo "Restarting..."
 pm2 restart ./bin/www || pm2 start ./bin/www --name audiophile-api
