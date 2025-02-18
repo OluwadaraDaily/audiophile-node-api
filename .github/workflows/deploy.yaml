@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow when changes are pushed to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest  # Runs the workflow on an Ubuntu machine (GitHub's default runner)
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2  # This action checks out your repo so the workflow can access the latest code
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3  # This action sets up the SSH agent to authenticate to your EC2 instance
+      with:
+        ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # Fetches your private SSH key from GitHub secrets
+
+    - name: Install dependencies
+      run: |
+        npm install  # Installs all dependencies in your repo
+
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no ec2-user@<${{ secrets.EC2_PUBLIC_IP }}> << 'EOF'
+          cd ~/audiophile-node-api  # Navigate to your app directory on the EC2 instance
+          git pull origin main  # Pull the latest changes from GitHub (main branch)
+          npm install  # Install any new dependencies that were added
+          pm2 restart audiophile-api  # Restart the PM2 process to apply updates
+        EOF
