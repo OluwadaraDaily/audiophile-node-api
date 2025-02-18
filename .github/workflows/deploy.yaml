@@ -19,7 +19,7 @@ jobs:
         echo "${{ secrets.EC2_SSH_PRIVATE_KEY }}"
 
     - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.3  # This action sets up the SSH agent to authenticate to your EC2 instance
+      uses: webfactory/ssh-agent@v0.7.0  # This action sets up the SSH agent to authenticate to your EC2 instance
       with:
         ssh-private-key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}  # Fetches your private SSH key from GitHub secrets
         ssh-passphrase: ${{ secrets.EC2_SSH_PASSPHRASE }}
