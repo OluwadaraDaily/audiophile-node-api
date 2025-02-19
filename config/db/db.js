@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config({ path: "../../.env" });
 
 const { v4: uuidv4 } = require('uuid');
 const knexConfig = require('./knexfile');

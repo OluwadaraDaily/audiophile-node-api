@@ -15,6 +15,10 @@ const registerUser = async (userInfo) => {
     throw new Error(`User with email(${email}) already exists`)
   }
 
+  if (password.length < 6) {
+    throw new Error('Password must be at least 6 characters long');
+  }
+
   const hashedPassword = await hashPassword(password);
   const token = await generateToken();
 
