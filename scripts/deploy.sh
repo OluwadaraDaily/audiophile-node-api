@@ -9,6 +9,17 @@ cd ~/audiophile-node-api
 echo "Checking out to main branch..."
 git checkout main
 
+# Check if package.json has changed
+if git diff --name-only HEAD~1 | grep -q "package.json"; then
+  echo "package.json has changed. Committing package-lock.json..."
+  
+  # Commit package-lock.json
+  git add package-lock.json
+  git commit -m "Updated dependencies and package-lock.json"
+else
+  echo "package.json has not changed. Skipping commit."
+fi
+
 # Pull the latest changes
 echo "Pulling latest changes from origin/main..."
 git pull origin main
