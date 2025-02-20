@@ -33,7 +33,7 @@ git pull origin main
 
 # Pull the latest changes
 echo "Pulling latest changes from origin/main..."
-git pull origin main
+git push origin main
 
 # Install dependencies and build the app if needed
 echo "Installing deps.."
