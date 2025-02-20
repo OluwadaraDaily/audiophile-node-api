@@ -12,6 +12,10 @@ git checkout main
 # Set git config to allow for pulling
 git config --global pull.rebase false
 
+# Pull the latest changes
+echo "Pulling latest changes from origin/main..."
+git pull origin main
+
 # # Check if package.json has changed
 # if git diff --name-only HEAD~1 | grep -q "package.json"; then
 #   echo "package.json has changed. Committing package-lock.json..."
