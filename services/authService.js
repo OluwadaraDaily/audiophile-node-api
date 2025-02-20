@@ -10,10 +10,16 @@ const BASE_URL = process.env.BASE_URL
 
 const registerUser = async (userInfo) => {
   const { first_name, last_name, email, password } = userInfo;
+  
+  if (password.length < 6) {
+    throw new Error('Password must be at least 6 characters long');
+  }
+
   const user = await userService.getUserByEmail(email)
   if (user) {
     throw new Error(`User with email(${email}) already exists`)
   }
+
 
   const hashedPassword = await hashPassword(password);
   const token = await generateToken();
