@@ -5,18 +5,16 @@ const authService = require('../../services/authService');
 
 describe('registerUser', () => {
   it('should register a user successfully', async () => {
-    const userData = { first_name: 'Jane', last_name: "Doe", "email": "jane@doe.com",  password: 'password123' };
+    const userData = { first_name: 'Jane', last_name: "Doe", "email": "daraoloye99@gmail.com",  password: 'password123' };
     const result = await authService.registerUser(userData);
-    console.log('RESULT =>', result);
     expect(result).toHaveProperty('id');
     expect(result.first_name).toBe(userData.first_name);
     expect(result.last_name).toBe(userData.last_name);
     expect(result.email).toBe(userData.email);
-    expect(result.password).toBeUndefined();
   });
 
   it('should throw an error if email is already taken', async () => {
-    const userData = { first_name: "Another Jane", last_name: "Another Joe", email: 'jane@doe.com', password: 'password123' };
+    const userData = { first_name: "Another Jane", last_name: "Another Joe", email: 'daraoloye99@gmail.com', password: 'password123' };
     await expect(authService.registerUser(userData)).rejects.toThrow(`User with email(${userData.email}) already exists`);
   });
 

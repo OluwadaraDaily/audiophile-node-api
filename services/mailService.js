@@ -15,7 +15,6 @@ const sendEmail = async ({ to, subject, text, html }) => {
     };
 
     const info = await mg.messages.create(MAILGUN_SANDBOX_URL, mailOptions);
-    console.log('Email sent:', info);
     return info;
   } catch (error) {
     console.error('Error sending email:', error);

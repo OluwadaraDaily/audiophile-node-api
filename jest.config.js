@@ -138,7 +138,9 @@ const config = {
   ],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // setupFilesAfterEnv: [],
+  setupFilesAfterEnv: [
+    "./tests/config/afterEnv.setup.js"
+  ],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -147,7 +149,7 @@ const config = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  // testEnvironment: "jest-environment-node",
+  testEnvironment: "node",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
@@ -195,6 +197,9 @@ const config = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
+
+  // Helps find unclosed async operations
+  detectOpenHandles: true,
 };
 
 module.exports = config;
