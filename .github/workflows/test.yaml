@@ -9,6 +9,31 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.TEST_DB_NAME }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    
+    env:
+      NODE_ENV: test
+      BASE_URL: http://localhost:3000
+      DB_HOST: 127.0.0.1
+      DB_USERNAME: root
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      TEST_DB_NAME: ${{ secrets.TEST_DB_NAME }}
+      MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+      ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
+      REFRESH_SECRET: ${{ secrets.REFRESH_SECRET }}
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
