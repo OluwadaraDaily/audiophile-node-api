@@ -9,6 +9,9 @@ cd ~/audiophile-node-api
 echo "Checking out to main branch..."
 git checkout main
 
+# Set git config to allow for pulling
+git config --global pull.rebase false
+
 # # Check if package.json has changed
 # if git diff --name-only HEAD~1 | grep -q "package.json"; then
 #   echo "package.json has changed. Committing package-lock.json..."
