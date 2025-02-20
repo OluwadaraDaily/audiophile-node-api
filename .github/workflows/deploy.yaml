@@ -1,12 +1,17 @@
 name: Deploy to EC2
 
 on:
+  workflow_run:
+    workflows: ["Test"]
+    types:
+      - completed
   push:
     branches:
       - main
 
 jobs:
   deploy:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

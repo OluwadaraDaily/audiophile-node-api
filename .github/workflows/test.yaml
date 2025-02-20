@@ -1,0 +1,57 @@
+name: Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.TEST_DB_NAME }}
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    
+    env:
+      NODE_ENV: test
+      BASE_URL: http://localhost:3000
+      DB_HOST: 127.0.0.1
+      DB_USERNAME: root
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      TEST_DB_NAME: ${{ secrets.TEST_DB_NAME }}
+      MAILGUN_API_KEY: ${{ secrets.MAILGUN_API_KEY }}
+      ACCESS_SECRET: ${{ secrets.ACCESS_SECRET }}
+      REFRESH_SECRET: ${{ secrets.REFRESH_SECRET }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run migrations
+        run: |
+          cd config/db
+          ls
+          echo "Files are above..."
+          npx knex migrate:latest
+
+      - name: Run tests
+        run: npm test
